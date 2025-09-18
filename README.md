@@ -2,6 +2,10 @@
 
 A professional console-based fraud tracking and reporting system designed to help communities share and manage information about fraudulent activities across various platforms.
 
+## Preview
+
+![Preview](photo/Preview.png)
+
 ## Features
 
 - **Comprehensive Fraud Tracking**: Support for multiple fraud types including scams, phishing, identity theft, investment fraud, romance scams, and tech support scams
