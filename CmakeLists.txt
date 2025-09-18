@@ -1,0 +1,63 @@
+cmake_minimum_required(VERSION 3.15)
+project(FraudFinder LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Compiler-specific options
+
+
+# vcpkg provides CMake config for SQLite3
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
+find_package(fmt CONFIG QUIET)
+
+# Include directories
+include_directories(include)
+
+set(SOURCES
+    src/main.cpp
+    src/database.cpp
+    src/fraud_entry.cpp
+    src/console_ui.cpp
+    src/utils.cpp
+)
+
+set(HEADERS
+    include/database.h
+    include/fraud_entry.h
+    include/console_ui.h
+    include/utils.h
+)
+
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+
+# Link libraries
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    unofficial::sqlite3::sqlite3
+)
+
+# Link fmt if available
+if(fmt_FOUND)
+    target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE HAS_FMT)
+endif()
+
+# Windows-specific settings
+if(WIN32)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        WIN32_EXECUTABLE FALSE
+    )
+endif()
+
+# Install rules
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+
+# Build information
+message(STATUS "=== ${PROJECT_NAME} Build Configuration ===")
+message(STATUS "Project: ${PROJECT_NAME}")
+message(STATUS "Version: ${PROJECT_VERSION}")
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "C++ standard: C++${CMAKE_CXX_STANDARD}")
+message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS "vcpkg toolchain: ${CMAKE_TOOLCHAIN_FILE}")
